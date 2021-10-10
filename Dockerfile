@@ -1,11 +1,13 @@
-FROM golang:latest AS builder
-ADD . /app
-WORKDIR /app
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o /main .
+FROM golang:alpine AS build
+RUN apk --no-cache add gcc g++ make git
+WORKDIR /go/src/app
+COPY . .
+RUN go mod tidy
+RUN GOOS=linux go build -ldflags="-s -w" -o ./bin/web-app .
 
-FROM scratch
-ENV MONGODB_USERNAME=MONGODB_USERNAME MONGODB_PASSWORD=MONGODB_PASSWORD MONGODB_ENDPOINT=MONGODB_ENDPOINT
-COPY --from=builder /main ./
-ENTRYPOINT ["./main"]
-EXPOSE 8080
+FROM alpine:3.13
+RUN apk --no-cache add ca-certificates
+WORKDIR /usr/bin
+COPY --from=build /go/src/app/bin /go/bin
+EXPOSE 80
+ENTRYPOINT /go/bin/web-app --port 80

@@ -9,22 +9,28 @@ import (
 )
 
 type User struct {
-	ID        	primitive.ObjectID `bson:"_id"`
-	CreatedAt 	time.Time          `bson:"created_at"`
-	UpdatedAt 	time.Time          `bson:"updated_at"`
-	Username  	string             `bson:"username"`
-	DeviceId	string             `bson:"device_id"`
-	Score		float64				`bson:"score"`
+	ID        primitive.ObjectID `bson:"_id"`
+	CreatedAt time.Time          `bson:"created_at"`
+	UpdatedAt time.Time          `bson:"updated_at"`
+	Username  string             `bson:"username"`
+	DeviceId  string             `bson:"device_id"`
+	Score     float64            `bson:"score"`
 }
+
 const UsernameExist = "USERNAME_EXIST"
-const SUCCESS= "SUCCESS"
-func handleGetUserInfo(c *gin.Context){
+const SUCCESS = "SUCCESS"
+
+func handlePing(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"msg": "ping"})
+}
+
+func handleGetUserInfo(c *gin.Context) {
 	var user User
 	user.Username = c.Param("name")
 	user.DeviceId = c.Param("deviceId")
 	info, err := GetUserInfo(&user)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error() })
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"user": info})
@@ -34,12 +40,12 @@ func handleCreateUser(c *gin.Context) {
 	var user User
 	user.Username = c.Param("name")
 	user.DeviceId = c.Param("deviceId")
-	result , err := GetUserInfo(&user)
-	if err != nil{
+	result, err := GetUserInfo(&user)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
-	if  result.Username != "" && result.DeviceId != ""{
+	if result.Username != "" && result.DeviceId != "" {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": "username already exists", "code": UsernameExist})
 		return
 	}

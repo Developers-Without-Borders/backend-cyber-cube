@@ -1,0 +1,9 @@
+version: '2'
+services:
+  go-web-app:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: .
+    environment:
+      - PORT=80
