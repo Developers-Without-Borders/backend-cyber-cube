@@ -25,3 +25,10 @@ services:
       - "6379"
     ports:
       - "6379:6379"
+
+  api:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - PORT=80
