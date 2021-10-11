@@ -13,18 +13,18 @@ services:
     ports:
       - "27017:27017"
 
-  server_redis_database:
-    image: redis:latest
-    container_name: server_redis_database
-    env_file:
-      - .env
-    volumes:
-      - ./redis_data:/data
-    restart: always
-    expose:
-      - "6379"
-    ports:
-      - "6379:6379"
+#  server_redis_database:
+#    image: redis:latest
+#    container_name: server_redis_database
+#    env_file:
+#      - .env
+#    volumes:
+#      - ./redis_data:/data
+#    restart: always
+#    expose:
+#      - "6379"
+#    ports:
+#      - "6379:6379"
 
   api:
     build: .

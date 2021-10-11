@@ -5,9 +5,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"os"
+	"time"
 )
 
-func updateScore(user *User,newScore float64)(User,error)  {
+func updateScore(user *User, newScore float64) (User, error) {
 	client, ctx, cancel := getConnection()
 	dbName := os.Getenv("MONGODB_DBNAME")
 	defer cancel()
@@ -24,9 +25,10 @@ func updateScore(user *User,newScore float64)(User,error)  {
 	filter := bson.M{"_id": bson.M{"$eq": info.ID}}
 	update := bson.M{
 		"$set": bson.M{
-			"username": info.Username,
-			"device_id": info.DeviceId,
-			"score":newScore,
+			"username":   info.Username,
+			"device_id":  info.DeviceId,
+			"score":      newScore,
+			"updated_at": time.Now(),
 		},
 	}
 	info.Score = newScore
@@ -35,5 +37,5 @@ func updateScore(user *User,newScore float64)(User,error)  {
 		return info, err
 	}
 
-	return info,nil
+	return info, nil
 }

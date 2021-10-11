@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"os"
+	"time"
 )
 
 func Create(user *User) (primitive.ObjectID, error) {
@@ -21,7 +22,8 @@ func Create(user *User) (primitive.ObjectID, error) {
 		}
 	}(client, ctx)
 	user.ID = primitive.NewObjectID()
-
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
 	result, err := client.Database(dbName).Collection("users").InsertOne(ctx, user)
 	if err != nil {
 		log.Printf("Could not create Task: %v", err)
