@@ -11,15 +11,7 @@ func main() {
 	r.GET("/user/info/:deviceId", handleGetUserInfoByDeviceId)
 	r.PUT("/user/:name/:deviceId", handleCreateUser)
 	r.PUT("/score/:name/:deviceId/:score", handleUpdateScore)
-
-	//client := redis.NewClient(&redis.Options{
-	//	Addr: "localhost:6379",
-	//	Password: "",
-	//	DB: 0,
-	//})
-	//
-	//pong, err := client.Ping().Result()
-	//fmt.Println(pong, err)
+	r.DELETE("/user/:deviceId", handleDeleteUserInfo)
 
 	err := r.Run()
 	if err != nil {

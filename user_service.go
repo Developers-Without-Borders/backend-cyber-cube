@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -72,4 +73,26 @@ func GetUserInfoByDeviceId(user *User) (User, error) {
 		return empty, nil
 	}
 	return result, nil
+}
+
+func deleteInfoByDeviceId(deviceId string) (int64, error) {
+
+	client, ctx, cancel := getConnection()
+	dbName := os.Getenv("MONGODB_DBNAME")
+	filter := bson.D{primitive.E{Key: "device_id", Value: deviceId}}
+	defer cancel()
+	defer func(client *mongo.Client, ctx context.Context) {
+		err := client.Disconnect(ctx)
+		if err != nil {
+
+		}
+	}(client, ctx)
+	result, err := client.Database(dbName).Collection("users").DeleteOne(ctx, filter)
+	if err != nil {
+		log.Fatal(err)
+		return 0, err
+
+	}
+	fmt.Printf("DeleteOne removed %v document(s)\n", result.DeletedCount)
+	return result.DeletedCount, nil
 }
