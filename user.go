@@ -21,7 +21,7 @@ const UsernameExist = "USERNAME_EXIST"
 const SUCCESS = "SUCCESS"
 
 func handlePing(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"msg": "ping"})
+	c.JSON(http.StatusOK, gin.H{"msg": "ping alive"})
 }
 
 func handleGetUserInfo(c *gin.Context) {
