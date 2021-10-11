@@ -30,5 +30,5 @@ services:
     build: .
     ports:
       - "80:80"
-    environment:
-      - PORT=80
+    env_file:
+      - server.env
