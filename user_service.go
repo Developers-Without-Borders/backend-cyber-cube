@@ -30,7 +30,6 @@ func Create(user *User) (primitive.ObjectID, error) {
 	return oid, nil
 }
 
-
 func GetUserInfo(user *User) (User, error) {
 	result := User{}
 	client, ctx, cancel := getConnection()
@@ -45,13 +44,32 @@ func GetUserInfo(user *User) (User, error) {
 	empty := User{}
 	err := client.Database(dbName).Collection("users").FindOne(ctx, filter).Decode(&result)
 	if err == mongo.ErrNoDocuments {
-		return empty,nil
+		return empty, nil
 	}
-	if result.DeviceId != user.DeviceId{
+	if result.DeviceId != user.DeviceId {
 		return *user, errors.New("username mismatched with this device")
 	}
 	if err != nil {
 		return result, errors.New("username doesnt exists")
+	}
+	return result, nil
+}
+
+func GetUserInfoByDeviceId(user *User) (User, error) {
+	result := User{}
+	client, ctx, cancel := getConnection()
+	dbName := os.Getenv("MONGODB_DBNAME")
+	filter := bson.D{primitive.E{Key: "device_id", Value: user.DeviceId}}
+	defer cancel()
+	defer func(client *mongo.Client, ctx context.Context) {
+		err := client.Disconnect(ctx)
+		if err != nil {
+		}
+	}(client, ctx)
+	empty := User{}
+	err := client.Database(dbName).Collection("users").FindOne(ctx, filter).Decode(&result)
+	if err == mongo.ErrNoDocuments {
+		return empty, nil
 	}
 	return result, nil
 }

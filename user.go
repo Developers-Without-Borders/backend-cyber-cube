@@ -63,3 +63,14 @@ func handleCreateUser(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"id": id})
 }
+
+func handleGetUserInfoByDeviceId(c *gin.Context) {
+	var user User
+	user.DeviceId = c.Param("deviceId")
+	info, err := GetUserInfoByDeviceId(&user)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"user": info})
+}
