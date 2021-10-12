@@ -58,8 +58,8 @@ func GetUserInfo(user *User) (User, error) {
 	return result, nil
 }
 
-func GetUserInfoByDeviceId(user *User) (User, error) {
-	result := User{}
+func GetUserInfoByDeviceId(user *User) (UserResponse, error) {
+	result := UserResponse{}
 	client, ctx, cancel := getConnection()
 	dbName := os.Getenv("MONGODB_DBNAME")
 	filter := bson.D{primitive.E{Key: "device_id", Value: user.DeviceId}}
@@ -69,11 +69,13 @@ func GetUserInfoByDeviceId(user *User) (User, error) {
 		if err != nil {
 		}
 	}(client, ctx)
-	empty := User{}
+	empty := UserResponse{}
 	err := client.Database(dbName).Collection("users").FindOne(ctx, filter).Decode(&result)
 	if err == mongo.ErrNoDocuments {
+		empty.IsSuccess = false
 		return empty, nil
 	}
+	empty.IsSuccess = true
 	return result, nil
 }
 

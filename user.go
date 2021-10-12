@@ -17,6 +17,16 @@ type User struct {
 	Score     float64            `bson:"score"`
 }
 
+
+type UserResponse struct {
+	CreatedAt time.Time          `bson:"created_at"`
+	UpdatedAt time.Time          `bson:"updated_at"`
+	Username  string             `bson:"username"`
+	DeviceId  string             `bson:"device_id"`
+	Score     float64            `bson:"score"`
+	IsSuccess bool 				 `bson:"is_success"`
+}
+
 const UsernameExist = "USERNAME_EXIST"
 const SUCCESS = "SUCCESS"
 
