@@ -49,6 +49,10 @@ func GetUserInfo(user *User) (User, error) {
 	if err == mongo.ErrNoDocuments {
 		return empty, nil
 	}
+	fmt.Println("****************************************************")
+	fmt.Println(result)
+	fmt.Println(result.DeviceId)
+	fmt.Println("****************************************************")
 	if result.DeviceId != user.DeviceId {
 		return *user, errors.New("username mismatched with this device")
 	}
