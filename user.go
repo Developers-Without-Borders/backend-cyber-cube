@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"log"
 	"net/http"
 	"time"
 )
@@ -17,14 +16,13 @@ type User struct {
 	Score     float64            `bson:"score"`
 }
 
-
 type UserResponse struct {
-	CreatedAt time.Time          `bson:"created_at"`
-	UpdatedAt time.Time          `bson:"updated_at"`
-	Username  string             `bson:"username"`
-	DeviceId  string             `bson:"device_id"`
-	Score     float64            `bson:"score"`
-	IsSuccess bool 				 `bson:"is_success"`
+	CreatedAt time.Time `bson:"created_at"`
+	UpdatedAt time.Time `bson:"updated_at"`
+	Username  string    `bson:"username"`
+	DeviceId  string    `bson:"device_id"`
+	Score     float64   `bson:"score"`
+	IsSuccess bool      `bson:"is_success"`
 }
 
 const UsernameExist = "USERNAME_EXIST"
@@ -61,11 +59,11 @@ func handleCreateUser(c *gin.Context) {
 	}
 
 	user.Score = 0.0
-	if err := c.ShouldBindJSON(&user); err != nil {
-		log.Print(err)
-		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
-		return
-	}
+	//if err := c.ShouldBindJSON(&user); err != nil {
+	//	log.Print(err)
+	//	c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
+	//	return
+	//}
 	id, err := Create(&user)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": err.Error()})
