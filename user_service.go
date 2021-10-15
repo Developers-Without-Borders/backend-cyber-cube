@@ -25,7 +25,8 @@ func Create(user *User) (primitive.ObjectID, error) {
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 	fmt.Println("*********************USER*******************************")
-	fmt.Println(user)
+	fmt.Println(user.Username)
+	fmt.Println(user.DeviceId)
 	fmt.Println("****************************************************")
 
 	result, err := client.Database(dbName).Collection("users").InsertOne(ctx, user)
@@ -52,10 +53,7 @@ func GetUserInfo(user *User) (User, error) {
 	if err == mongo.ErrNoDocuments {
 		return User{}, nil
 	}
-	fmt.Println("****************************************************")
-	fmt.Println(result)
-	fmt.Println(result.DeviceId)
-	fmt.Println("****************************************************")
+
 	if result.DeviceId != user.DeviceId {
 		return *user, errors.New("username mismatched with this device")
 	}
