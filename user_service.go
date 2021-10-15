@@ -24,6 +24,10 @@ func Create(user *User) (primitive.ObjectID, error) {
 	user.ID = primitive.NewObjectID()
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
+	fmt.Println("*********************USER*******************************")
+	fmt.Println(user)
+	fmt.Println("****************************************************")
+
 	result, err := client.Database(dbName).Collection("users").InsertOne(ctx, user)
 	if err != nil {
 		log.Printf("Could not create Task: %v", err)
@@ -44,10 +48,9 @@ func GetUserInfo(user *User) (User, error) {
 		if err != nil {
 		}
 	}(client, ctx)
-	empty := User{}
 	err := client.Database(dbName).Collection("users").FindOne(ctx, filter).Decode(&result)
 	if err == mongo.ErrNoDocuments {
-		return empty, nil
+		return User{}, nil
 	}
 	fmt.Println("****************************************************")
 	fmt.Println(result)
